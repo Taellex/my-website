@@ -1,19 +1,444 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE-EmulateIE7">
-    <title>Due-In Visibility</title>
-	<script language="JavaScript" type="text/JavaScript">
-	</script>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	
-    <style>
+	 function newWindow( url ) {
+       window.open(url,"downpop","directories=no,toolbar=no,menubar=no,scrollbars=yes");
+     }
+	 function changePage(newLoc) {
+       nextPage = newLoc.options[newLoc.selectedIndex].value
+       if( nextPage != "" ) {
+         document.location.href = nextPage
+       }
+     }
+     
+        function overlay(e) {
+            console.log('overlay function called');
+            const overlay = document.getElementById('overlay');
+            if (!overlay) {
+                console.error('Element with ID "overlay" not found');
+                return;
+            }
+            const filePath = e.dataset.file || 'images/due_in_details.html';
+            overlay.innerHTML = '<p>Loading...</p>';
+            overlay.style.visibility = 'visible';
+            fetch(filePath)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) throw new Error('File not found');
+                    return response.text();
+                })
+                .then(data => {
+                    console.log('Content length:', data.length, 'Content:', data);
+                    overlay.innerHTML = data;
+                    overlay.style.visibility = 'visible';
+                })
+                .catch(error => {
+                    console.error('Error loading file:', error);
+                    overlay.innerHTML = '<p>Error loading details.</p>';
+                    overlay.style.visibility = 'visible';
+                });
+        }
+
+				function closeOverlay() {
+            console.log('closeOverlay called');
+            const overlay = document.getElementById('overlay');
+            if (overlay) {
+                overlay.style.visibility = 'hidden';
+                overlay.innerHTML = '';
+            }
+        }
+
+     
+        function toggle_visibility(e) {
+            if (document.all) {
+                document.getElementById(tbid).style.display = document.getElementById(tbid).style.display == "block" ? "none" : "block";
+            } else {
+                document.getElementById(tbid).style.display = document.getElementById(tbid).style.display == "table" ? "none" : "table";
+            }
+            document.getElementById(lnkid).value = document.getElementById(lnkid).value == "[-] Collapse" ? "[+] Expand" : "[-] Collapse";
+        }
+        function setup_visibility(lnkid) {
+            document.getElementById(lnkid).click();
+            document.getElementById(lnkid).click();
+        }
+        function setup_expand_visibility(lnkid) {
+            document.getElementById(lnkid).click();
+        }
+     function expand_all_sublinks(e) {        
+        var item=e.target.id.replace("lnkAll","");
+        var type="";
+        if (document.getElementById(e.target.id).value.indexOf("Expand") != -1){type="Expand";}else{type="Collapse"}
+        
+        document.getElementById(e.target.id).value = document.getElementById(e.target.id).value == "[-] Collapse All" ? "[+] Expand All" : "[-] Collapse All";      
+        
+        if (typeof(document.getElementById('lnk_inTran' + item)) != 'undefined' && document.getElementById('lnk_inTran' + item) != null)
+        {
+            if (document.getElementById('lnk_inTran' + item).value.indexOf(type) != -1){document.getElementById('lnk_inTran' + item).click();}
+        }
+        if (typeof(document.getElementById('lnk_po' + item)) != 'undefined' && document.getElementById('lnk_po' + item) != null)
+        {
+            if (document.getElementById('lnk_po' + item).value.indexOf(type) != -1){document.getElementById('lnk_po' + item).click();}
+        }
+        if (typeof(document.getElementById('lnk_ibAlloc' + item)) != 'undefined' && document.getElementById('lnk_ibAlloc' + item) != null)
+        {
+            if (document.getElementById('lnk_ibAlloc' + item).value.indexOf(type) != -1){document.getElementById('lnk_ibAlloc' + item).click();}
+        }
+        if (typeof(document.getElementById('lnk_tsfExp' + item)) != 'undefined' && document.getElementById('lnk_tsfExp' + item) != null)
+        {
+            if (document.getElementById('lnk_tsfExp' + item).value.indexOf(type) != -1){document.getElementById('lnk_tsfExp' + item).click();}
+        }
+     }
+     
+     function add_qty(qty,runningQty) {       
+        var q1=parseInt(qty);
+        var tq=parseInt(document.getElementById(runningQty).innerHTML);
+        document.getElementById(runningQty).innerHTML=tq+q1;
+     }
+	</script>
+						<style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
         h1 { color: #333; }
     </style>
-</head>
-<body>
-    <h1>Welcome to My Website!</h1>
-    <p>This is hosted on GitHub Pages.</p>
-</body>
-</html>
+					</head>
+					<body>
+						<center>
+							<p align="center">
+   </p>
+							<div id="_pleaseWait" style="width: 1px; margin: 0px auto; display: none;">
+								<center>
+									<img src="./images/loading.gif" alt="loading">
+										<br>
+											<b>Please Wait. This may take several minutes.</b>
+										</center>
+									</div>
+									<a href="https://h5.aafes.com/pog">
+										<img width="20%" height="20%" src="./images/SD_E_Logo_White.png" alt="eBusiness" title="Return to eBusiness Home Page">
+   </a>
+										<p/>
+										<b>This application is used to view due-in details to a store for an item or group of items.</b>
+										<br>
+											<br>
+												<b>Please note that the information viewed in this report is a day behind real-time data. You will need to allow 24-hours after your scheduled poll day for the system to update.</b>
+												<ul>
+													<li>Enter Store number by FRC, 7-digit or 10-digit number. You must also enter either group or item number; item number can be CRC (7-digit), UPC (12-digit) or EAN (14-digit).</li>
+													<li>All items with due-in quantity are displayed. To view document details such as manifest or PO information, click View Details to the right of the row chosen.</li>
+													<li>The RMS Document number is displayed for communication with HQ. Providing this number is helpful for research purposes.</li>
+												</ul>
+												<script type="text/javascript">document.getElementById('_pleaseWait').style.display='none';document.getElementById('_pleaseWait').style.width='1px';</script>
+												<b>
+													<form action="http://1apebizsrv01.aafes.com/cgi-bin/find_due_in.pl" method="GET">
+														<table>
+															<tbody>
+																<tr>
+																	<td style="text-align:right;">
+																		<label for="storeNo">
+																			<b>Store Number:</b>
+																		</label>
+																	</td>
+																	<td style="text-align:left;">
+																		<input type="text" name="storeNo" id="storeNo"/>
+																	</tr>
+																	<tr>
+																		<td style="text-align:right;">
+																			<label for="groupNo">
+																				<b>Group Number:</b>
+																			</label>
+																		</td>
+																		<td>
+																			<select name="groupNo" id="groupNo">
+																				<option value=""/>
+																				<option value="301">301 - Automotive</option>
+																				<option value="401">401 - Consumables Marketpl</option>
+																				<option value="405">405 - SSSC</option>
+																				<option value="406">406 - Marketplace - Sales </option>
+																				<option value="407">407 - Softlines Marketplac</option>
+																				<option value="409">409 - Buy-Back Merchandise</option>
+																				<option value="410">410 - Tobacco</option>
+																				<option value="414">414 - Grocery</option>
+																				<option value="415">415 - Meat</option>
+																				<option value="416">416 - Produce</option>
+																				<option value="417">417 - Bakery</option>
+																				<option value="418">418 - Gov't Uniform &amp; Gear</option>
+																				<option value="419">419 - DSCP</option>
+																				<option value="420">420 - Food</option>
+																				<option value="422">422 - Wine</option>
+																				<option value="423">423 - Beer</option>
+																				<option value="425">425 - Spirits</option>
+																				<option value="429">429 - Beverages</option>
+																				<option value="430">430 - Health and Beauty</option>
+																				<option value="434">434 - Cosmetics</option>
+																				<option value="435">435 - Cleaning Supplies</option>
+																				<option value="440">440 - Military Tactical</option>
+																				<option value="450">450 - Fashion Jewelry</option>
+																				<option value="451">451 - Watches</option>
+																				<option value="456">456 - Fine Jewelry</option>
+																				<option value="458">458 - Telecommunications</option>
+																				<option value="459">459 - Coupons</option>
+																				<option value="460">460 - Stationery</option>
+																				<option value="465">465 - Stationary</option>
+																				<option value="469">469 - Bookmark</option>
+																				<option value="470">470 - Mens Clothing</option>
+																				<option value="471">471 - Mens Furnishings</option>
+																				<option value="472">472 - Ladies Clothing</option>
+																				<option value="473">473 - Ladies Furnishings</option>
+																				<option value="474">474 - Boys</option>
+																				<option value="475">475 - Girls</option>
+																				<option value="476">476 - Infants and Toddlers</option>
+																				<option value="477">477 - Footwear</option>
+																				<option value="478">478 - Domestics</option>
+																				<option value="479">479 - Sewing and Crafts</option>
+																				<option value="480">480 - Tabletop</option>
+																				<option value="481">481 - Kitchenware</option>
+																				<option value="482">482 - Giftware</option>
+																				<option value="483">483 - Pets</option>
+																				<option value="484">484 - Major Appliances</option>
+																				<option value="485">485 - Housewares</option>
+																				<option value="486">486 - Furniture</option>
+																				<option value="487">487 - Hardware</option>
+																				<option value="488">488 - Luggage</option>
+																				<option value="489">489 - Outdoor Living</option>
+																				<option value="490">490 - Home Decore</option>
+																				<option value="491">491 - Sporting Goods</option>
+																				<option value="492">492 - Processed Film</option>
+																				<option value="493">493 - Photo</option>
+																				<option value="494">494 - Computer Hardware</option>
+																				<option value="495">495 - Toys</option>
+																				<option value="496">496 - Computer Software</option>
+																				<option value="497">497 - Home Entertainment</option>
+																				<option value="498">498 - Music and Video</option>
+																				<option value="499">499 - Retail Dummy</option>
+																				<option value="511">511 - Institutional Foods</option>
+																				<option value="711">711 - Institut Foods - Exp</option>
+																				<option value="771">771 - Expense</option>
+																				<option value="821">821 - Fresh Fish</option>
+																				<option value="901">901 - Personal Services</option>
+																				<option value="902">902 - Gasoline</option>
+																				<option value="903">903 - Labor</option>
+																				<option value="904">904 - Video Rental</option>
+																				<option value="907">907 - RETAIL GIFT CARD</option>
+																				<option value="908">908 - Financial Cards</option>
+																				<option value="909">909 - Donation</option>
+																				<option value="910">910 - PRE-SELL MERCHANDISE</option>
+																				<option value="911">911 - Heat &amp; Eat and Ice</option>
+																				<option value="912">912 - Photo Processing</option>
+																				<option value="919">919 - Commissary Mdse</option>
+																				<option value="920">920 - Food -Consumption</option>
+																				<option value="921">921 - Fresh Fish-Cost</option>
+																				<option value="924">924 - Meat-Cost</option>
+																				<option value="926">926 - Produce-Cost</option>
+																				<option value="927">927 - Bakery-Cost</option>
+																				<option value="928">928 - Deli-Cost</option>
+																				<option value="930">930 - Digital Download</option>
+																				<option value="993">993 - Photo Finishing</option>
+																				<option value="994">994 - General Services</option>
+																				<script type="text/javascript">document.getElementById('storeNo').value='1010879';</script>
+																			</select>
+																		</td>
+																		<td>
+																			<i>
+																				<center>(Required:</center>
+																			</i>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="text-align:right;">
+																			<label for="itemNo">
+																				<b>Item Number:</b>
+																			</label>
+																		</td>
+																		<td style="text-align:left;">
+																			<input type="text" name="itemNo" id="itemNo"/>
+																			<td>
+																				<i>Group Number OR Item Number)</i>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td colspan="2">
+																				<center>
+																					<input type="submit" value="Submit"/>
+																				</td>
+																			</tr>
+																		</tbody>
+																	</table>
+																</form>
+															</b>
+															<div id="_pleaseWait_loaded" style="width: 1px; margin: 0px auto; display: none;">
+																<center>
+																	<img src="./images/loading.gif" alt="loading">
+																		<br>
+																			<b>Please Wait. This may take several minutes.</b>
+																		</center>
+																	</div>
+																	<table id="tblMain" style="visibility: visible;" width="100%" border="0" align="center" cellpadding="4" cellspacing="0">
+																		<tbody>
+																			<tr height="3">
+																				<td bgcolor="#727272" colspan="3"/>
+																			</tr>
+																			<tr bgcolor="#EEEEEE" height="15">
+																				<td>
+																					<strong>
+																						<table border="1" width="100%" style="border:1px solid #DFDFDF;background-color:#F9F9F9;border-radius:3px;font-family:Arial,&#39;Bitstream Vera Sans&#39;,Helvetica,Verdana,sans-serif;">
+																							<tbody>
+																								<tr> <!-- First Table headers-->
+																									<th style="text-shadow:rgba(255,255,255,0.796875) 0px 1px 0px;font-family:Georgia,&#39;Times New Roman&#39;,&#39;Bitstream Charter&#39;,Times,serif;font-weight:normal;padding:7px 7px 8px;text-align:left;line-height:1.3em;font-size:14px;border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;">10-digit Fac</th>
+																									<th style="text-shadow:rgba(255,255,255,0.796875) 0px 1px 0px;font-family:Georgia,&#39;Times New Roman&#39;,&#39;Bitstream Charter&#39;,Times,serif;font-weight:normal;padding:7px 7px 8px;text-align:left;line-height:1.3em;font-size:14px;border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;">7-digit Fac</th>
+																									<th style="text-shadow:rgba(255,255,255,0.796875) 0px 1px 0px;font-family:Georgia,&#39;Times New Roman&#39;,&#39;Bitstream Charter&#39;,Times,serif;font-weight:normal;padding:7px 7px 8px;text-align:left;line-height:1.3em;font-size:14px;border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;">FRC</th>
+																									<th style="text-shadow:rgba(255,255,255,0.796875) 0px 1px 0px;font-family:Georgia,&#39;Times New Roman&#39;,&#39;Bitstream Charter&#39;,Times,serif;font-weight:normal;padding:7px 7px 8px;text-align:left;line-height:1.3em;font-size:14px;border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;border-right:1px solid #DFDFDF;">Facility Name</th>
+																								</tr> <!-- First Table contents-->
+																								<tr style="text-align:left;">
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:12px;padding:4px 7px 2px;vertical-align:top;">3720100200</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:12px;padding:4px 7px 2px;vertical-align:top;">1010879</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:12px;padding:4px 7px 2px;vertical-align:top;">4532446</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;border-right:1px solid #DFDFDF;font-size:12px;padding:4px 7px 2px;vertical-align:top;">JBSA-SAM NEW MAIN ST</td>
+																								</tr>
+																								<tr height="3">
+																									<td bgcolor="#727272" colspan="8"/>
+																								</tr>
+																								<tr> <!-- Second table headers for department listing -->
+																									<th style="text-shadow:rgba(255,255,255,0.796875) 0px 1px 0px;font-family:Georgia,&#39;Times New Roman&#39;,&#39;Bitstream Charter&#39;,Times,serif;font-weight:normal;padding:7px 7px 8px;text-align:left;line-height:1.3em;font-size:14px;border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;width:70px;">CRC</th>
+																									<th style="text-shadow:rgba(255,255,255,0.796875) 0px 1px 0px;font-family:Georgia,&#39;Times New Roman&#39;,&#39;Bitstream Charter&#39;,Times,serif;font-weight:normal;padding:7px 7px 8px;text-align:left;line-height:1.3em;font-size:14px;border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;width:90px;">UPC</th>
+																									<th style="text-shadow:rgba(255,255,255,0.796875) 0px 1px 0px;font-family:Georgia,&#39;Times New Roman&#39;,&#39;Bitstream Charter&#39;,Times,serif;font-weight:normal;padding:7px 7px 8px;text-align:left;line-height:1.3em;font-size:14px;border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;">Description</th>
+																									<th style="text-shadow:rgba(255,255,255,0.796875) 0px 1px 0px;font-family:Georgia,&#39;Times New Roman&#39;,&#39;Bitstream Charter&#39;,Times,serif;font-weight:normal;padding:7px 7px 8px;text-align:left;line-height:1.3em;font-size:14px;border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;">Division</th>
+																									<th style="text-shadow:rgba(255,255,255,0.796875) 0px 1px 0px;font-family:Georgia,&#39;Times New Roman&#39;,&#39;Bitstream Charter&#39;,Times,serif;font-weight:normal;padding:7px 7px 8px;text-align:left;line-height:1.3em;font-size:14px;border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;">Group</th>
+																									<th style="text-shadow:rgba(255,255,255,0.796875) 0px 1px 0px;font-family:Georgia,&#39;Times New Roman&#39;,&#39;Bitstream Charter&#39;,Times,serif;font-weight:normal;padding:7px 7px 8px;text-align:left;line-height:1.3em;font-size:14px;border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;">Dept</th>
+																									<th style="text-shadow:rgba(255,255,255,0.796875) 0px 1px 0px;font-family:Georgia,&#39;Times New Roman&#39;,&#39;Bitstream Charter&#39;,Times,serif;font-weight:normal;padding:7px 7px 8px;text-align:left;line-height:1.3em;font-size:14px;border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;width:50px;border-right:1px solid #DFDFDF;">Total Due-In Qty</th>
+																								</tr>
+																								<tr style="text-align:left;"> <!-- Second table first table element -->
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">0252619</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">073161942885</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">TUB MAT CLEAR               MAYTEX MILLS</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">Hardlines</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">478 - Domestics</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">1078 - Bath Linens</td>
+																									<td id="totalQty0252619" style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;border-right:1px solid #DFDFDF;">18</td>
+																									<!-- Trying to fix anchor here -->
+																									<td style="border:0;" bgcolor="#EEEEEE" align="left">
+																										<input id="lnk4532446-0252619" title="TUB MAT CLEAR MAYTEX MILLS" type="button" style="border:none;background:none;width:100px" value="[+] View Details" onclick="overlay(this);" data-file="images/due_in_details 01.html";"/>
+																										
+																									</tr>
+																								<tr style="text-align:left;"> <!-- Second table second table element -->
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">1068658</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">021864390571</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">White silver monogram Bath Towel Letter B</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">Hardlines</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">478 - Domestics</td>
+																									<td style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;">1078 - Bath Linens</td>
+																									<td id="totalQty1068658" style="border-top-color:white;border-bottom:1px solid #DFDFDF;color:#555;font-size:11px;padding:4px 7px 2px;vertical-align:top;border-right:1px solid #DFDFDF;">12</td>
+																									<td style="border:0;" bgcolor="#EEEEEE" align="left">
+																										<input id="lnk4532446-1068658" title="White silver monogram Bath Towel Letter B" type="button" style="border:none;background:none;width:100px" value="[+] View Details" onclick="overlay(this);" data-file="images/due_in_details 02.html"/>
+																									</tr>
+																								</tbody>
+																							</table>
+																								<!--
+																								<iframe id="frame" height="1px" style="visibility:hidden;" src="./images/due_in_details.html">
+																								</iframe>
+																								-->
+																								<div id="overlay" style="visibility: hidden; overflow: scroll; position: fixed; left: 0px; top: 0px; width: 100%; height: 100%; text-align: center; z-index: 1000;">
+																									<div id="overlay_msg" style="width:90%;margin:10% auto;background-color:white;border:1px solid;padding:15px;text-align:center;border-color:black;display:none;">
+																										<table width="100%" border="0" cellpadding="4" cellspacing="0" id="_details">
+																											<tbody> <!-- Seems like sample of popup window on click -->
+																												<tr>
+																													<td bgcolor="#D1DEED" colspan="80%" style="border-bottom:1px solid #999;border-right:1px solid #999;">Due-in details</td>
+																													<td align="right">
+																														<input id="btnClose" type="button" style="border:solid;background:none;" value="X" onclick="overlay(this);"/>
+																													</tr>
+																													<tr>
+																														<td colspan="3">
+																															<table align="center" style="border-color:#f5f5f5;padding:5px;border-radius:5px;border:1px solid #ebebeb;width:70%;">
+																																<tbody>
+																																	<tr height="5">
+																																		<td colspan="3" bgcolor="#999"/>
+																																	</tr>
+																																	<tr>
+																																		<th colspan="3" style="padding:1px 5px;text-align:left;border-bottom:1px solid #fff;text-shadow:0 1px 0 white;color:#999;border-bottom:1px solid #999;border-top:1px solid #999;font-weight:bold;">
+																																			<center>
+																																				<b>Due-in details for</b>:</center>
+																																		</th>
+																																	</tr>
+																																	<tr>
+																																		<th style="padding:1px 5px;text-align:left;border-bottom:1px solid #999;text-shadow:0 1px 0 white;color:#999;border-right:1px solid #999;">FRC</th>
+																																		<th style="padding:1px 5px;text-align:left;border-bottom:1px solid #999;text-shadow:0 1px 0 white;color:#999;border-right:1px solid #999;">CRC</th>
+																																		<th style="padding:1px 5px;text-align:left;border-bottom:1px solid #999;text-shadow:0 1px 0 white;color:#999;">Description</th>
+																																	</tr>
+																																	<tr>
+																																		<td style="padding:1px 5px;text-align:left;font-size:14px;border-bottom:1px solid #999;border-right:1px solid #999;">4532446</td>
+																																		<td style="padding:1px 5px;text-align:left;font-size:14px;border-bottom:1px solid #999;border-right:1px solid #999;">0252619</td>
+																																		<td id="_details_desc" style="padding:1px 5px;text-align:left;font-size:14px;border-bottom:1px solid #999;">TUB MAT CLEAR               MAYTEX MILLS</td>
+																																	</tr>
+																																	<tr height="5">
+																																		<td colspan="3" bgcolor="#999"/>
+																																	</tr>
+																																</tbody>
+																															</table>
+																														</td>
+																													</tr>
+																													<tr style="border-top:3px solid #999;border-bottom:3px solid #999;"/>
+																													<tr bgcolor="#EEEEEE">
+																														<td style="border-bottom-style:solid;border-right-style:solid;border-right-width:thin;border-bottom-width:medium;border-right-color:#000080;border-bottom-color:#000080;border-top-color:#000080;border-top-width:medium;border-top-style:solid;border-left-color:#000080;border-left-width:thin;border-left-style:solid;">
+																															<center>XDOCK/ILP</center>
+																														</td>
+																													</tr>
+																													<tr>
+																														<td colspan="100%">
+																															<table width="100%" border="0" cellpadding="4" cellspacing="0" id="tbl_ibAlloc0252619" style="text-indent:1em;font-family:verdana,helvetica,arial,san-serif;font-size:11px;">
+																																<tbody>
+																																	<tr>
+																																		<td align="left">
+																																			<u>Due-In Type</u>
+																																		</td>
+																																		<td align="left">
+																																			<u>RMS Document</u>
+																																		</td>
+																																		<td align="left">
+																																			<u>PO#</u>
+																																		</td>
+																																		<td align="left">
+																																			<u>Whse</u>
+																																		</td>
+																																		<td align="left">
+																																			<u>Qty</u>
+																																		</td>
+																																		<td align="left">
+																																			<u>Exp Delivery Date to WH</u>
+																																		</td>
+																																	</tr>
+																																	<tr>
+																																		<td align="left">ILP PO</td>
+																																		<td align="left">1016619113</td>
+																																		<td align="left"> 0067020801</td>
+																																		<td align="left">1059915 - WACO AAFES</td>
+																																		<td align="left">6</td>
+																																		<td align="left">31-AUG-25</td>
+																																	</tr>
+																																	<tr>
+																																		<td align="left">ILP PO</td>
+																																		<td align="left">1016640499</td>
+																																		<td align="left"> 0067130247</td>
+																																		<td align="left">1059915 - WACO AAFES</td>
+																																		<td align="left">12</td>
+																																		<td align="left">14-SEP-25</td>
+																																	</tr>
+																																</tbody>
+																															</table>
+																														</td>
+																													</tr>
+																													<tr>
+																														<td colspan="100%" bgcolor="#D1DEED" align="right" style="border-top:1px solid #999;border-bottom:1px solid #999;border-right:1px solid #999;">Details as of: <b>31 Aug 2025 00:32:02</b>
+																														</td>
+																													</tr>
+																												</tbody>
+																											</table>
+																										</div>
+																									</div>
+																									<script type="text/javascript">document.getElementById('_pleaseWait_loaded').style.display='none';document.getElementById('_pleaseWait_loaded').style.width='1px';</script>
+																									<script type="text/javascript">document.getElementById('tblMain').style.visibility='visible';document.getElementById('tblMain').focus;document.getElementById('tblMain').scrollIntoView(true);</script>
+																								</strong>
+																							</td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</center>
+																		</body>
+																	</html>
