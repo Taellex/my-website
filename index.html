@@ -26,22 +26,45 @@
             const filePath = e.dataset.file || 'images/due_in_details.html';
             overlay.innerHTML = '<p>Loading...</p>';
             overlay.style.visibility = 'visible';
-            fetch(filePath)
-                .then(response => {
-                    console.log('Response status:', response.status);
-                    if (!response.ok) throw new Error('File not found');
-                    return response.text();
-                })
-                .then(data => {
-                    console.log('Content length:', data.length, 'Content:', data);
-                    overlay.innerHTML = data;
-                    overlay.style.visibility = 'visible';
-                })
-                .catch(error => {
-                    console.error('Error loading file:', error);
-                    overlay.innerHTML = '<p>Error loading details.</p>';
-                    overlay.style.visibility = 'visible';
-                });
+
+            // Check if running on file:// protocol
+            if (window.location.protocol === 'file:') {
+                // Use XMLHttpRequest for file://
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', filePath, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 0 || xhr.status === 200) { // status 0 for file://
+                            console.log('Content length:', xhr.responseText.length, 'Content:', xhr.responseText);
+                            overlay.innerHTML = xhr.responseText;
+                            overlay.style.visibility = 'visible';
+                        } else {
+                            console.error('Error loading file:', xhr.statusText);
+                            overlay.innerHTML = '<p>Error loading details.</p>';
+                            overlay.style.visibility = 'visible';
+                        }
+                    }
+                };
+                xhr.send();
+            } else {
+                // Use fetch for http:// or https://
+                fetch(filePath)
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        if (!response.ok) throw new Error('File not found');
+                        return response.text();
+                    })
+                    .then(data => {
+                        console.log('Content length:', data.length, 'Content:', data);
+                        overlay.innerHTML = data;
+                        overlay.style.visibility = 'visible';
+                    })
+                    .catch(error => {
+                        console.error('Error loading file:', error);
+                        overlay.innerHTML = '<p>Error loading details.</p>';
+                        overlay.style.visibility = 'visible';
+                    });
+            }
         }
 
 				function closeOverlay() {
